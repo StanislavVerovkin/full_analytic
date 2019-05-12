@@ -32,11 +32,19 @@ module.exports.remove = async (req, res) => {
     }
 };
 
-module.exports.create = (req, res) => {
-    try {
+module.exports.create = async (req, res) => {
 
+    const category = new Category({
+        name: req.body.name,
+        user: req.user.id,
+        imageSrc: req.file ? req.file.path : '',
+    });
+
+    try {
+        // await category.save();
+        res.status(201).json(category);
     } catch (e) {
-        errorrHandler(res, e);
+        errorHandler(res, e);
     }
 };
 
@@ -44,6 +52,6 @@ module.exports.update = (req, res) => {
     try {
 
     } catch (e) {
-        errorrHandler(res, e);
+        errorHandler(res, e);
     }
 };
