@@ -8,7 +8,6 @@ const categorySchema = new Schema({
     },
     imageSrc: {
         type: String,
-        default: '',
     },
     user: {
         ref: 'users',

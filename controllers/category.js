@@ -41,7 +41,7 @@ module.exports.create = async (req, res) => {
     });
 
     try {
-        // await category.save();
+        await category.save();
         res.status(201).json(category);
     } catch (e) {
         errorHandler(res, e);
