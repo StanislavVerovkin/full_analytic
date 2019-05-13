@@ -25,8 +25,7 @@ export class TokenInterceptor implements HttpInterceptor {
     }
     return next.handle(req)
       .pipe(
-        catchError(
-          (error: HttpErrorResponse) => this.handleAuthError(error)
+        catchError((error: HttpErrorResponse) => this.handleAuthError(error)
         )
       )
   }
@@ -39,7 +38,6 @@ export class TokenInterceptor implements HttpInterceptor {
         }
       });
     }
-
     return throwError(error)
   }
 }
