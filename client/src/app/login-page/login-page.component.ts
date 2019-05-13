@@ -1,6 +1,8 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {FormControl, FormGroup, Validators} from "@angular/forms";
 import {AuthService} from "../shared/services/auth.service";
+import {ActivatedRoute, Params, Router} from "@angular/router";
+import {MaterialService} from "../shared/helpers/material.service";
 
 @Component({
   selector: 'app-login-page',
@@ -11,7 +13,11 @@ export class LoginPageComponent implements OnInit {
 
   form: FormGroup;
 
-  constructor(private auth: AuthService) {
+  constructor(
+    private auth: AuthService,
+    private router: Router,
+    private route: ActivatedRoute
+  ) {
   }
 
   ngOnInit() {
@@ -24,19 +30,28 @@ export class LoginPageComponent implements OnInit {
         Validators.required,
         Validators.minLength(6),
       ])
+    });
+
+    this.route.queryParams.subscribe((params: Params) => {
+      if (params['registered']) {
+        MaterialService.toast('Зайдите в систему используя данные');
+      } else if (params['accessDenied']) {
+        MaterialService.toast('Авторизуйтесь в системе');
+      } else if (params['sessionExpired']) {
+        MaterialService.toast('Время сессии истекло');
+      }
     })
   }
 
   onSubmit() {
     this.form.disable();
-
     this.auth.login(this.form.value)
       .subscribe(
-        () => console.log('success'),
+        () => this.router.navigate(['/overview']),
         error => {
-          console.warn(error);
+          MaterialService.toast(error.error.message);
           this.form.enable();
         },
-      ).unsubscribe();
+      );
   }
 }
