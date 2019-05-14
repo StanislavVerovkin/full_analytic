@@ -1,11 +1,11 @@
 import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
-import {ActivatedRoute, Params} from "@angular/router";
+import {ActivatedRoute, Params, Router} from "@angular/router";
 import {FormControl, FormGroup, Validators} from "@angular/forms";
 import {CategoriesService} from "../../shared/services/categories.service";
 import {switchMap} from "rxjs/operators";
 import {of} from "rxjs/internal/observable/of";
 import {MaterialService} from "../../shared/helpers/material.service";
-import {Category} from "../../shared/interfaces";
+import {Category, Message} from "../../shared/interfaces";
 
 @Component({
   selector: 'app-categories-form',
@@ -23,7 +23,8 @@ export class CategoriesFormComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
-    private categoriesService: CategoriesService
+    private categoriesService: CategoriesService,
+    private router: Router
   ) {
   }
 
@@ -98,5 +99,13 @@ export class CategoriesFormComponent implements OnInit {
 
       }
     )
+  }
+
+  onRemove() {
+    this.categoriesService.removeCategory(this.category._id)
+      .subscribe((message: Message) => {
+        MaterialService.toast(message.message);
+        this.router.navigate(['/categories']);
+      })
   }
 }
