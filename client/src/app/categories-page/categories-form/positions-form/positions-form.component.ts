@@ -1,6 +1,5 @@
 import {AfterViewInit, Component, ElementRef, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {PositionsService} from "../../../shared/services/positions.setvice";
-import {Position} from "../../../shared/interfaces";
 import {MaterialInstance, MaterialService} from "../../../shared/helpers/material.service";
 
 @Component({

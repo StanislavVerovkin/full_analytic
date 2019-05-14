@@ -23,7 +23,7 @@ module.exports.login = async (req, res) => {
                 token: `Bearer ${token}`
             })
         } else {
-            res.status(401).json({
+            res.status(409).json({
                 message: 'Incorrect password. Try again.'
             })
         }
