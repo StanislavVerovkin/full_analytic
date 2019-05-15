@@ -77,9 +77,9 @@ export class PositionsFormComponent implements OnInit, AfterViewInit, OnDestroy 
       newPosition._id = this.positionId;
       this.positionsService.updatePosition(newPosition)
         .subscribe(
-          (pos) => {
-            const idx = this.positions.findIndex(p => p._id === pos._id);
-            this.positions[idx] = pos;
+          (position) => {
+            const idx = this.positions.findIndex(p => p._id === position._id);
+            this.positions[idx] = position;
             MaterialService.toast('Position updated');
           },
           (error) => {
