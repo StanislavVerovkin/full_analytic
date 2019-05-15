@@ -47,6 +47,7 @@
   <div class="modal-footer">
     <button
       (click)="onCloseModal()"
+      [disabled]="pending"
       class="modal-action waves-effect waves-black btn-flat"
     >
       Отмена
@@ -54,7 +55,7 @@
     <button
       type="submit"
       (click)="onSubmit()"
-      [disabled]="order.list.length === 0"
+      [disabled]="order.list.length === 0 || pending"
       class="modal-action btn waves-effect"
     >
       Подтвердить

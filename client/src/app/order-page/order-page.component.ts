@@ -15,6 +15,7 @@ export class OrderPageComponent implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild('modal') modalRef: ElementRef;
   isRoot: boolean;
   modal: MaterialInstance;
+  pending = false;
 
   constructor(
     private router: Router,
@@ -49,6 +50,7 @@ export class OrderPageComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   onSubmit() {
+    this.pending = true;
 
     const order: Order = {
       list: this.order.list.map(item => {
@@ -66,6 +68,7 @@ export class OrderPageComponent implements OnInit, OnDestroy, AfterViewInit {
         error => MaterialService.toast(error.error.message),
         () => {
           this.modal.close();
+          this.pending = false;
         }
       )
   }
