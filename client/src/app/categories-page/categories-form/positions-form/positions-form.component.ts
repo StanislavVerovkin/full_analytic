@@ -61,7 +61,7 @@ export class PositionsFormComponent implements OnInit, AfterViewInit, OnDestroy 
   onSubmit() {
     this.form.disable();
 
-    const position: Position = {
+    const newPosition: Position = {
       name: this.form.value.name,
       cost: this.form.value.cost,
       category: this.categoryId,
@@ -74,8 +74,8 @@ export class PositionsFormComponent implements OnInit, AfterViewInit, OnDestroy 
     };
 
     if (this.positionId) {
-      position._id = this.positionId;
-      this.positionsService.updatePosition(position)
+      newPosition._id = this.positionId;
+      this.positionsService.updatePosition(newPosition)
         .subscribe(
           (pos) => {
             const idx = this.positions.findIndex(p => p._id === pos._id);
@@ -87,7 +87,7 @@ export class PositionsFormComponent implements OnInit, AfterViewInit, OnDestroy 
           },
           () => completed());
     } else {
-      this.positionsService.createPosition(position)
+      this.positionsService.createPosition(newPosition)
         .subscribe(
           (pos) => {
             MaterialService.toast('Position created');
