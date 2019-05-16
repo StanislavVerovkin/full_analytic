@@ -14,5 +14,6 @@ export class HistoryListComponent implements OnInit {
   }
 
   ngOnInit() {
+    console.log(this.orders);
   }
 }

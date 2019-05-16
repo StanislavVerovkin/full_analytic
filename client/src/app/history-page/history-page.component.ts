@@ -20,32 +20,47 @@ export class HistoryPageComponent implements OnInit, OnDestroy, AfterViewInit {
   offset = 0;
   limit = STEP;
 
+  loading = false;
+  reloading = false;
+  noMoreOrders = false;
+
   constructor(
     private orderService: OrderService
   ) {
   }
 
   ngOnInit() {
+    this.reloading = true;
     this.getRequest();
   }
 
   ngAfterViewInit() {
-    this.tooltip = MaterialService.initToltip(this.tooltipRef);
+    this.tooltip = MaterialService.initTooltip(this.tooltipRef);
   }
 
   ngOnDestroy() {
     this.tooltip.destroy();
   }
 
+  loadMore() {
+    this.offset += STEP;
+    this.loading = true;
+    this.getRequest();
+  }
+
   private getRequest() {
+
     const params = {
       offset: this.offset,
       limit: this.limit,
     };
+
     this.orderService.getListOfOrders(params).subscribe(
       orders => {
-        console.log(orders);
-        this.orders = orders;
+        this.orders = this.orders.concat(orders);
+        this.noMoreOrders = orders.length < STEP;
+        this.loading = false;
+        this.reloading = false;
       }
     )
   }
