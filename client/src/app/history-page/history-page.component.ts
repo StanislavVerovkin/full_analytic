@@ -1,7 +1,7 @@
 import {AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {MaterialInstance, MaterialService} from "../shared/helpers/material.service";
 import {OrderService} from "../shared/services/order.service";
-import {Order} from "../shared/interfaces";
+import {Filter, Order} from "../shared/interfaces";
 
 @Component({
   selector: 'app-history-page',
@@ -15,6 +15,7 @@ export class HistoryPageComponent implements OnInit, OnDestroy, AfterViewInit {
   tooltip: MaterialInstance;
   isFilterVisible = false;
   orders: Order[] = [];
+  filter: Filter = {};
 
   offset = 0;
   limit = 2;
@@ -47,12 +48,24 @@ export class HistoryPageComponent implements OnInit, OnDestroy, AfterViewInit {
     this.getRequest();
   }
 
+  applyFilter(filter: Filter) {
+    this.orders = [];
+    this.offset = 0;
+    this.reloading = true;
+    this.filter = filter;
+    this.getRequest();
+  }
+
+  isFiltered(): boolean {
+    return Object.keys(this.filter).length !== 0;
+  }
+
   private getRequest() {
 
-    const params = {
+    const params = Object.assign({}, this.filter, {
       offset: this.offset,
       limit: this.limit,
-    };
+    });
 
     this.orderService.getListOfOrders(params).subscribe(
       orders => {

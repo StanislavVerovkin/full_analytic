@@ -18,6 +18,7 @@ module.exports.getAll = async (req, res) => {
         }
 
         query.date['$lte'] = req.query.end;
+        console.log(req.query.end);
     }
 
     if (req.query.order) {
