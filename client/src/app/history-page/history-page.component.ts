@@ -3,8 +3,6 @@ import {MaterialInstance, MaterialService} from "../shared/helpers/material.serv
 import {OrderService} from "../shared/services/order.service";
 import {Order} from "../shared/interfaces";
 
-const STEP = 2;
-
 @Component({
   selector: 'app-history-page',
   templateUrl: './history-page.component.html',
@@ -13,12 +11,13 @@ const STEP = 2;
 export class HistoryPageComponent implements OnInit, OnDestroy, AfterViewInit {
 
   @ViewChild('tooltip') tooltipRef: ElementRef;
+
   tooltip: MaterialInstance;
   isFilterVisible = false;
   orders: Order[] = [];
 
   offset = 0;
-  limit = STEP;
+  limit = 2;
 
   loading = false;
   reloading = false;
@@ -43,7 +42,7 @@ export class HistoryPageComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   loadMore() {
-    this.offset += STEP;
+    this.offset += this.limit;
     this.loading = true;
     this.getRequest();
   }
@@ -58,7 +57,7 @@ export class HistoryPageComponent implements OnInit, OnDestroy, AfterViewInit {
     this.orderService.getListOfOrders(params).subscribe(
       orders => {
         this.orders = this.orders.concat(orders);
-        this.noMoreOrders = orders.length < STEP;
+        this.noMoreOrders = orders.length < this.limit;
         this.loading = false;
         this.reloading = false;
       }
