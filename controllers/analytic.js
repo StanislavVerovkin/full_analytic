@@ -21,7 +21,7 @@ module.exports.overview = async (req, res) => {
 
         //Percent for orders quantity
         //((yesterday orders / quantity in day) - 1) * 100
-        const ordersPercent = (((yesterdayOrdersNumber / ordersPerDay) - 1) * 100).toFixed(2);
+        const percentOrders = (((yesterdayOrdersNumber / ordersPerDay) - 1) * 100).toFixed(2);
 
         //Total revenue
         const totalRevenue = calculatePrice(allOrders);
@@ -49,10 +49,10 @@ module.exports.overview = async (req, res) => {
                 isHigher: +percentRevenue > 0,
             },
             orders: {
-                percent: Math.abs(+ordersPercent),
+                percent: Math.abs(+percentOrders),
                 compare: Math.abs(+compareNumber),
                 yesterday: +yesterdayOrdersNumber,
-                isHigher: +ordersPercent > 0,
+                isHigher: +percentOrders > 0,
             },
         })
     } catch (e) {
@@ -60,8 +60,26 @@ module.exports.overview = async (req, res) => {
     }
 };
 
-module.exports.analytics = (req, res) => {
+module.exports.analytics = async (req, res) => {
+    try {
+        const allOrders = await Order.find({user: req.user.id}).sort({date: 1});
+        const ordersMap = getOrdersMap(allOrders);
 
+        const average = +(calculatePrice(allOrders) / Object.keys(ordersMap).length).toFixed(2);
+
+        const chart = Object.keys(ordersMap).map(label => {
+
+            const gain = calculatePrice(ordersMap[label]);
+            const order = ordersMap[label].length;
+
+            return {label, gain, order}
+        });
+
+        res.status(200).json({average, chart})
+
+    } catch (e) {
+        errorHandler(res, e)
+    }
 };
 
 function getOrdersMap(orders = []) {

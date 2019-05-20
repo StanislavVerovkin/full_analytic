@@ -10,9 +10,7 @@ module.exports.login = async (req, res) => {
 
     if (candidate) {
 
-        const passwordResult = bcrypt.compareSync(req.body.password, candidate.password);
-
-        if (passwordResult) {
+        if (bcrypt.compareSync(req.body.password, candidate.password)) {
 
             const token = jwt.sign({
                 email: candidate.email,
@@ -20,7 +18,7 @@ module.exports.login = async (req, res) => {
             }, keys.jwt, {expiresIn: 160 * 160});
 
             res.status(200).json({
-                token: `Bearer ${token}`
+                token: `Bearer ${token}`,
             })
         } else {
             res.status(409).json({
